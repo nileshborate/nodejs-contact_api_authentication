@@ -9,7 +9,7 @@ export const newContact = async (req, res) => {
     email,
     phone,
     type,
-    //user: req.user,
+    user: req.user,
   });
 
   res.status(201).json({
@@ -61,7 +61,12 @@ export const getAllContact = async (req, res) => {
 };
 
 //get all contacts by userid
-export const getContactByUserId = async (req, res) => {};
+export const getContactByUserId = async (req, res) => {
+  const id = req.params.id;
+
+  const userContacts = await Contact.find({ user: id });
+  res.json({ message: 'All User Contact Fetched', userContacts });
+};
 
 //get specific contact by id
 export const getContactById = async (req, res) => {
