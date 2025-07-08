@@ -1,22 +1,34 @@
+import mongoose from 'mongoose';
 import { Contact } from '../Models/Contact.js';
 
 //create new contact
 export const newContact = async (req, res) => {
   const { name, email, phone, type } = req.body;
 
-  let saveContact = await Contact.create({
-    name,
-    email,
-    phone,
-    type,
-    user: req.user,
-  });
+  const session = await mongoose.startSession();
+  //const session = await sequelize.transaction()
+  session.startTransaction();
 
-  res.status(201).json({
-    message: 'Contact Saved Successfully',
-    saveContact,
-    success: true,
-  });
+  try {
+    let saveContact = await Contact.create({
+      name,
+      email,
+      phone,
+      type,
+      user: req.user,
+    });
+
+    await session.commitTransaction();
+    res.status(201).json({
+      message: 'Contact Saved Successfully',
+      saveContact,
+      success: true,
+    });
+  } catch (err) {
+    await session.abortTransaction();
+    //await session.rollback()
+    res.status(500).json({ message: err.message, success: false });
+  }
 };
 
 //update contact
