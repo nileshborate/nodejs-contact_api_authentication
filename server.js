@@ -12,9 +12,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 mongoose
-  .connect(process.env.URL, {
+  /*.connect(process.env.URL, {
     dbName: 'June2025-FullStack',
-  })
+  })*/
+  .connect(process.env.URL, { serverSelectionTimeoutMS: 60000 })
   .then(() => console.log('MongoDB Connected.....'))
   .catch((err) => console.log('Error :', err));
 
