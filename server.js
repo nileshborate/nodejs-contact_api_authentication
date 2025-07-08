@@ -4,14 +4,15 @@ import mongoose from 'mongoose';
 import bodyParser from 'express';
 import userRouter from './Routes/user.js';
 import contactRouter from './Routes/contact.js';
+import cors from 'cors';
 
 const app = express();
 config({ path: '.env' });
 app.use(bodyParser.json());
+app.use(cors());
 
-const url = 'mongodb://localhost:27017/';
 mongoose
-  .connect(url, {
+  .connect(process.env.URL, {
     dbName: 'June2025-FullStack',
   })
   .then(() => console.log('MongoDB Connected.....'))
